@@ -52,6 +52,8 @@ class PaysprintRechargeController extends Controller
             'callback' => 'required|url',
         ]);
 
+        $merchantCode = str_pad(rand(0, 999999), 6, '0', STR_PAD_LEFT);
+
         $token = $this->tokenService->generateToken(); 
         $client = new Client();
 
@@ -64,7 +66,7 @@ class PaysprintRechargeController extends Controller
                     'Content-Type'  => 'application/json',
                 ],
                 'json' => [
-                    'merchantcode' => '1',
+                    'merchantcode' => $merchantCode,
                     'mobile'       => $request->mobile,
                     'is_new'       => $request->is_new,
                     'email'        => $request->email,

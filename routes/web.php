@@ -28,6 +28,10 @@ use App\Http\Controllers\PaysprintRechargeController;
 use App\Http\Controllers\ApiProviderController;
 use App\Http\Controllers\ApiProviderMappingController;
 
+use Illuminate\Http\Request;
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
+use Illuminate\Support\Facades\Log;
 
 
 Route::get('/clear-cache', function() {
@@ -36,6 +40,40 @@ Route::get('/clear-cache', function() {
     Artisan::call('config:cache');
     Artisan::call('view:clear');
     return "Cleared!";
+});
+
+Route::get('/onboard/callback', function (Request $request) {
+    $encryptedData = $request->get('data');
+
+    if (!$encryptedData) {
+        return response('Missing data parameter', 400);
+    }
+
+    try {
+        // Load from config instead of env directly
+        $secret = config('services.paysprint.jwt_secret');
+
+        if (!is_string($secret)) {
+            throw new \Exception('JWT Secret not configured properly.');
+        }
+
+        $decoded = JWT::decode($encryptedData, new Key($secret, 'HS256'));
+
+        Log::info('Decoded Onboard Callback:', (array) $decoded);
+
+        // Handle based on status
+        if ($decoded->status == '1') {
+            return redirect('/dashboard')->with('message', 'KYC completed successfully.');
+        } elseif ($decoded->status == '0') {
+            return redirect('/dashboard')->with('message', 'KYC pending. Please try again.');
+        } else {
+            return redirect('/dashboard')->with('message', 'Unexpected onboarding status.');
+        }
+
+    } catch (\Exception $e) {
+        Log::error('JWT decode error: ' . $e->getMessage());
+        return response('Invalid or expired token', 400);
+    }
 });
 
 Route::get('/signup', [UserController::class, 'Signup']);

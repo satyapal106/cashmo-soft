@@ -40,7 +40,11 @@
                                 </div>
                                 <div class="col-lg-12 col-md-6 mb-3">
                                     <label for="">Is_new</label>
-                                    <input type="text" class="form-control" name="is_new" placeholder="Is New" required>
+                                    <select name="is_new" class="form-control" required>
+                                        <option value="">-- Select --</option>
+                                        <option value="1">Yes (New Merchant)</option>
+                                        <option value="0">No (Existing Merchant)</option>
+                                    </select>
                                 </div>
                                 <div class="col-lg-12 col-md-6 mb-3">
                                     <label for="">Email</label>
@@ -104,7 +108,7 @@
                         if (response.success && response.data?.redirecturl) {
                             showToast(response.data.message ||
                                 "Onboarding link generated successfully", 'success');
-                                
+
                             // Redirect after 2 seconds
                             setTimeout(function() {
                                 window.open(response.data.redirecturl, '_blank');
