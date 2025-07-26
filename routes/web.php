@@ -108,6 +108,7 @@ Route::group(['prefix' => 'retailer', 'middleware' => ['retailerAuth']], functio
     Route::get('/onboarding-transaction', [AEPSController::class, 'OnboardingTransaction']);
     Route::get('/onboard-status', [AEPSController::class, 'OnboardStatus']);
     Route::get('/bank2-registration', [AEPSController::class, 'Bank2Registration']);
+    Route::post('/aeps-two-factorKyc', [AEPSController::class, 'aepsTwoFactorKyc']);
     Route::get('/bank2-authenticate', [AEPSController::class, 'Bank2Authenticate']);
     Route::get('/enquiry', [AEPSController::class, 'Enquiry']);
     Route::get('/withdrawl', [AEPSController::class, 'Withdrawl']);

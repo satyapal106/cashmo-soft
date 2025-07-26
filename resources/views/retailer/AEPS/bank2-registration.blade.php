@@ -35,11 +35,6 @@
                             @csrf
                             <div class="row">
                                 <div class="col-lg-4 col-md-4 mb-3">
-                                    <label for="">Access Mode Type</label>
-                                    <input type="text" class="form-control" name="accessmodetype"
-                                        placeholder="APP or SITE" required>
-                                </div>
-                                <div class="col-lg-4 col-md-4 mb-3">
                                     <label for="">Adhaar Number</label>
                                     <input type="number" class="form-control" name="adhaarnumber"
                                         placeholder="XXXXXXXX1234" required>
@@ -54,22 +49,22 @@
                                     <input type="text" class="form-control" id="latitude"  name="latitude" placeholder="22.44543"
                                         required>
                                 </div>
-                                <div class="col-lg-4 col-md-4 mb-3">
+                                <div class="col-lg-6 col-md-6 mb-3">
                                     <label for="">Longitude</label>
                                     <input type="text" class="form-control" name="longitude" id="longitude" placeholder="77.434"
                                         required>
                                 </div>
-                                <div class="col-lg-4 col-md-4 mb-3">
+                                {{-- <div class="col-lg-4 col-md-4 mb-3">
                                     <label for="">Reference No</label>
                                     <input type="text" class="form-control" name="referenceno"
                                         placeholder="Unique txn value" required>
-                                </div>
-                                <div class="col-lg-4 col-md-4 mb-3">
+                                </div> --}}
+                                <div class="col-lg-6 col-md-6 mb-3">
                                     <label for="">Sub Merchant ID</label>
                                     <input type="text" class="form-control" name="submerchantid"
                                         placeholder="Merchant code" required>
                                 </div>
-                                <div class="col-lg-4 col-md-4 mb-3">
+                                <div class="col-lg-6 col-md-6 mb-3">
                                     <label for="">Is Iris</label>
                                     <select class="form-control" name="is_iris" required>
                                         <option value="">Select</option>
@@ -78,18 +73,18 @@
                                         <option value="face_rd">face_rd (Only for bank2)</option>
                                     </select>
                                 </div>
-                                <div class="col-lg-4 col-md-4 mb-3">
+                                <div class="col-lg-6 col-md-6 mb-3">
                                     <label for="">Timestamp</label>
                                     <input type="datetime-local" class="form-control" name="timestamp" required>
                                 </div>
-                                <div class="col-lg-12 col-md-6 mb-3">
-                                    <label for="">Device Data (XML)</label>
-                                    <textarea class="form-control" name="data" placeholder="Device Data XML" rows="4" required></textarea>
-                                </div>
-                                <div class="col-lg-12 col-md-6 mb-3">
+                                {{-- <div class="col-lg-6 col-md-6 mb-3">
                                     <label for="">IP Address</label>
                                     <input type="text" class="form-control" name="ipaddress" placeholder="9.9.9.9"
                                         required>
+                                </div> --}}
+                                <div class="col-lg-12 col-md-6 mb-3">
+                                    <label for="">Device Data (XML)</label>
+                                    <textarea class="form-control" name="data" placeholder="Device Data XML" rows="4" required></textarea>
                                 </div>
                             </div>
 

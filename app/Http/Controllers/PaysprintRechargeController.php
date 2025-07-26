@@ -18,7 +18,7 @@ class PaysprintRechargeController extends Controller
     public function getOperators()
     {
         $token = $this->tokenService->generateToken();
-        
+
         $client = new Client();
 
         try {
@@ -54,7 +54,7 @@ class PaysprintRechargeController extends Controller
 
         $merchantCode = str_pad(rand(0, 999999), 6, '0', STR_PAD_LEFT);
 
-        $token = $this->tokenService->generateToken(); 
+        $token = $this->tokenService->generateToken();
         $client = new Client();
 
         try {
@@ -85,6 +85,69 @@ class PaysprintRechargeController extends Controller
             return response()->json([
                 'success' => false,
                 'error'   => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function aepsTwoFactorKyc(Request $request)
+    {
+        $request->validate([
+            'accessmodetype'  => 'required|in:APP,SITE',
+            'adhaarnumber'    => 'required|digits_between:12,16',
+            'mobilenumber'    => 'required|digits:10',
+            'latitude'        => 'required|numeric',
+            'longitude'       => 'required|numeric',
+            'referenceno'     => 'required|string|max:50',
+            'submerchantid'   => 'required|string|max:20',
+            'is_iris'         => 'required|in:Yes,No,face_rd',
+            'timestamp'       => 'required|date_format:Y-m-d H:i:s',
+            'data'            => 'required|string', // XML string
+            'ipaddress'       => 'required|ip',
+        ]);
+
+        $token = $this->tokenService->generateToken();
+
+        $key = config('paysprint.aes_key');
+        $iv  = config('paysprint.aes_iv');
+
+        $referenceno = now()->format('YmdHis') . rand(10, 99);
+        $ipaddress = $request->ip();
+        $payload = [
+            'accessmodetype' => "SITE",
+            'adhaarnumber'   => $request->adhaarnumber,
+            'mobilenumber'   => $request->mobilenumber,
+            'latitude'       => $request->latitude,
+            'longitude'      => $request->longitude,
+            'referenceno'    => $referenceno,
+            'submerchantid'  => $request->submerchantid,
+            'is_iris'        => $request->is_iris,
+            'timestamp'      => $request->timestamp,
+            'data'           => $request->data,
+            'ipaddress'      => $ipaddress,
+        ];
+
+        $encryptedBody = \App\Helpers\EncryptHelper::encryptPayload($payload, $key, $iv);
+
+        try {
+            $client = new \GuzzleHttp\Client(['timeout' => 180]); // 3-minute timeout
+
+            $response = $client->post('https://sit.paysprint.in/service-api/api/v1/service/aeps/kyc/Twofactorkyc/registration', [
+                'headers' => [
+                    'Token'         => $token,
+                    'accept'        => 'application/json',
+                    'content-type'  => 'application/json',
+                ],
+                'json' => [
+                    'body' => $encryptedBody,
+                ],
+            ]);
+
+            return response()->json(json_decode($response->getBody(), true));
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'API request failed',
+                'error'   => $e->getMessage()
             ], 500);
         }
     }
