@@ -90,6 +90,8 @@ Route::group(['prefix' => 'retailer', 'middleware' => ['retailerAuth']], functio
     //Wallet
     Route::get('/user-wallet', [WalletController::class, "UserWallet"]);
     Route::post('/add-balance', [WalletController::class, "addBalance"]);
+    Route::get('/wallet/request', [WalletController::class, 'showForm']);
+    Route::post('/wallet/request', [WalletController::class, 'sendRequest']);
 
     //use profile
     Route::get('/update-profile', [UserController::class, "UpdateProfile"]);
@@ -136,6 +138,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['adminAuth']], function () {
     Route::get('/mrs-wallet', [MRSPayController::class, 'MrsWallet']);
     Route::get('/wallet/{adminId}', [AdminController::class, 'index']);
     Route::post('/add-wallet-balance', [AdminController::class, 'AddWalletAmount']);
+    Route::get('/retailer-wallet-balance-request', [WalletController::class, 'RetailerBalanceRequest']);
+
     Route::get('/logout', [AdminController::class, "Logout"]);
     Route::match(['get', 'post'], '/add-retailer/{id?}', [RetailerController::class, 'AddRetailer']);
     Route::get('/all-retailer', [RetailerController::class, "AllRetailer"]);
